@@ -1,4 +1,4 @@
-import { formatCurrency } from '../scripts/utils/money.js'
+import { formatCurrency } from "../scripts/utils/money.js";
 
 export function getProduct(productId) {
   let matchingProduct;
@@ -33,6 +33,28 @@ class Product {
 
   getPrice() {
     return `$${formatCurrency(this.priceCents)}`;
+  }
+
+  extraInfoHTML() {
+    return "";
+  }
+}
+
+class Clothing extends Product {
+  sizeChartLink;
+
+  constructor(productDetails) {
+    super(productDetails); // call constructor of Parent class
+    this.sizeChartLink = productDetails.sizeChartLink;
+  }
+
+  // method overriding
+  extraInfoHTML() {
+    return `
+      <a href="${this.sizeChartLink} target="_blank">
+        Size chart
+      </a>
+    `;
   }
 }
 
@@ -508,5 +530,8 @@ export const products = [
     keywords: ["sweaters", "hoodies", "apparel", "mens"],
   },
 ].map((productDetails) => {
+  if (productDetails.type === "clothing") {
+    return new Clothing(productDetails);
+  }
   return new Product(productDetails);
 });
